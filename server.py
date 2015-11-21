@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, request
+from flask import Flask, send_from_directory, request, redirect
 import requests
 import json
 import urllib
@@ -6,9 +6,21 @@ import lxml
 import lxml.html
 import re
 import os
+from urlparse import urlparse, urlunparse
 
 
 app = Flask(__name__, static_url_path='/__static', static_folder='static')
+
+
+@app.before_request
+def redirect_nonwww():
+    """ Make sure we use the right domain. TODO: lang detection! """
+
+    urlparts = urlparse(request.url)
+    if "volupedia" in urlparts.netloc and urlparts.netloc != "en.volupedia.org":
+        urlparts_list = list(urlparts)
+        urlparts_list[1] = 'en.volupedia.org'
+        return redirect(urlunparse(urlparts_list), code=301)
 
 
 # Make sure we don't get indexed at all!
