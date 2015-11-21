@@ -1,3 +1,3 @@
 # volupedia
 
-http://volupedia.org
+http://www.volupedia.org
