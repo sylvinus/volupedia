@@ -1,1 +1,1 @@
-web: gunicorn server:app --workers 4 --worker-class gevent --worker-connections 10
+web: gunicorn server:app --worker-class gevent
