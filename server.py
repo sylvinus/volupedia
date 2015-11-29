@@ -141,7 +141,7 @@ def get_sketchfab_embed(sketchfab_model, width=640, height=480):
 
 
 def search_sketchfab_models(search):
-  api_url = "https://sketchfab.com/i/models?count=24&amp;features=&amp;flag=&amp;offset=0&amp;search=%s&amp;sort_by=-likeCount" % urllib.quote(search.encode("utf-8"))
+  api_url = "https://sketchfab.com/i/models?count=24&features=&flag=&offset=0&search=%s&sort_by=-likeCount" % urllib.quote(search.encode("utf-8"))
   js = json.loads(requests.get(api_url).content)
 
   for res in js.get("results"):
