@@ -14,24 +14,24 @@ app = Flask(__name__, static_url_path='/__static', static_folder='static')
 
 @app.before_request
 def redirect_nonwww():
-    """ Make sure we use the right domain. TODO: lang detection! """
+  """ Make sure we use the right domain. TODO: lang detection! """
 
-    urlparts = urlparse(request.url)
-    if "volupedia" in urlparts.netloc and urlparts.netloc != "en.volupedia.org":
-        urlparts_list = list(urlparts)
-        urlparts_list[1] = 'en.volupedia.org'
-        return redirect(urlunparse(urlparts_list), code=301)
+  urlparts = urlparse(request.url)
+  if "volupedia" in urlparts.netloc and urlparts.netloc != "en.volupedia.org":
+    urlparts_list = list(urlparts)
+    urlparts_list[1] = 'en.volupedia.org'
+    return redirect(urlunparse(urlparts_list), code=301)
 
 
-# Make sure we don't get indexed at all!
-@app.route('/robots.txt')
-@app.route('/static/images/project-logos/enwiki-2x.png')
+@app.route('/robots.txt')  # Make sure we don't get indexed at all!
+@app.route('/static/images/project-logos/enwiki-2x.png')  # replace logo by our own
 @app.route('/static/images/project-logos/enwiki-1.5x.png')
 @app.route('/static/images/project-logos/enwiki.png')
 def static_from_root():
-    return send_from_directory(app.static_folder, os.path.basename(request.path[1:]))
+  return send_from_directory(app.static_folder, os.path.basename(request.path[1:]))
 
 
+# All other requests will go through this handler
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
@@ -40,8 +40,7 @@ def catch_all(path):
   if request.query_string:
     wp_url += "?%s" % request.query_string
 
-  print "Wikipedia URL: ", wp_url
-
+  # Reverse request to Wikipedia
   wp_req = requests.get(wp_url, allow_redirects=False)
 
   # Intercept redirects (mostly after search)
@@ -52,6 +51,7 @@ def catch_all(path):
     urlparts[1] = req_urlparts[1]
     return redirect(urlunparse(urlparts), code=wp_req.status_code)
 
+  # We do a straight reverse proxy for everything other than HTML
   # TODO: also send headers along!
   if "text/html" not in wp_req.headers.get('Content-Type', ""):
     return wp_req.content
@@ -68,11 +68,10 @@ def catch_all(path):
   if len(title_elt) and inserter.exists():
     title = (re.sub("<.*?>", "", lxml.html.tostring(title_elt[0])) or "").strip()
 
-    print "Title: ", title
-
     if title:
       models = list(search_sketchfab_models(title))
-      print models
+
+      # Only replace if we found a page title, somewhere to insert, and a matching Sketchfab model!
       if len(models):
 
         width = inserter.get_width()
@@ -96,6 +95,7 @@ def catch_all(path):
 
 
 class InfoboxInserter(object):
+  """ Manages insertion in Wikipedia's infoboxes. http://en.volupedia.org/wiki/France """
   def __init__(self, tree):
     self.tree = tree
 
@@ -114,6 +114,7 @@ class InfoboxInserter(object):
 
 
 class ThumbInserter(InfoboxInserter):
+  """ Manages insertion in Wikipedia's image thumbnails. http://en.volupedia.org/wiki/Chair """
   def exists(self):
     self.inner = self.tree.cssselect(".thumb.tright .thumbinner")
     return len(self.inner) > 0

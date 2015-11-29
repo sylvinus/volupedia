@@ -8,7 +8,8 @@ It is a reverse proxy of Wikipedia that replaces the main image of the article b
 
 Feedback & bugfixes welcome!
 
-# Articles with interesting 3D model
+# Articles with interesting 3D models
+
  - http://en.volupedia.org/wiki/Eiffel_Tower
  - http://en.volupedia.org/wiki/Solar_System
  - http://en.volupedia.org/wiki/Palmyra
@@ -16,7 +17,6 @@ Feedback & bugfixes welcome!
 # TODO
 
  - blacklist some sketchfab tags (eggs?)
- - more than 1 model?
- - gunicorn back
- - conflict between top banner and fundraising header?
+ - insert more than 1 model?
+ - conflict between top banner and WP fundraising header?
  - better sketchfab order (likes+relevance?)
