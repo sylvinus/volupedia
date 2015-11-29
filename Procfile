@@ -1,1 +1,1 @@
-web: python server.py
+web: gunicorn server:app  --workers 4 --worker-class gevent --worker-connections 10 --log-file -
