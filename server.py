@@ -18,9 +18,7 @@ def redirect_nonwww():
 
   urlparts = urlparse(request.url)
   if "volupedia" in urlparts.netloc and urlparts.netloc != "en.volupedia.org":
-    urlparts_list = list(urlparts)
-    urlparts_list[1] = 'en.volupedia.org'
-    return redirect(urlunparse(urlparts_list), code=301)
+    return redirect(replace_domain(request.url, "http://en.volupedia.org", port=False), code=301)
 
 
 @app.route('/robots.txt')  # Make sure we don't get indexed at all!
@@ -36,20 +34,14 @@ def static_from_root():
 @app.route('/<path:path>')
 def catch_all(path):
 
-  wp_url = "https://en.wikipedia.org/%s" % path
-  if request.query_string:
-    wp_url += "?%s" % request.query_string
+  wp_url = replace_domain(request.url, "https://en.wikipedia.org/", port=True)
 
   # Reverse request to Wikipedia
   wp_req = requests.get(wp_url, allow_redirects=False)
 
   # Intercept redirects (mostly after search)
   if wp_req.headers.get("location"):
-    urlparts = list(urlparse(wp_req.headers["location"]))
-    req_urlparts = list(urlparse(request.url))
-    urlparts[0] = req_urlparts[0]
-    urlparts[1] = req_urlparts[1]
-    return redirect(urlunparse(urlparts), code=wp_req.status_code)
+    return redirect(replace_domain(wp_req.headers["location"], request.url, port=True), code=wp_req.status_code)
 
   # We do a straight reverse proxy for everything other than HTML
   # TODO: also send headers along!
@@ -130,6 +122,14 @@ class ThumbInserter(InfoboxInserter):
     for child in self.inner[0].getchildren():
       self.inner[0].remove(child)
     self.inner[0].insert(0, lxml.html.fromstring(embed_html))
+
+
+def replace_domain(url, replace_url, port=True):
+  urlparts = list(urlparse(url))
+  if port:
+    urlparts[0] = urlparse(replace_url)[0]
+  urlparts[1] = urlparse(replace_url)[1]
+  return urlunparse(urlparts)
 
 
 def get_sketchfab_embed(sketchfab_model, width=640, height=480):
