@@ -20,3 +20,13 @@ Feedback & bugfixes welcome!
  - insert more than 1 model?
  - conflict between top banner and WP fundraising header?
  - better sketchfab order (likes+relevance?)
+ - Non-english wikipedia domains
+
+# How to test locally
+
+```
+pip install -r requirements.txt
+python server.py
+```
+
+Then open http://localhost:5000
