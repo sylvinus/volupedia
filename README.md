@@ -1,8 +1,8 @@
-# volupedia
+# Volupedia
 
 http://www.volupedia.org
 
-Volupedia is an experiment mixing Wikipedia pages with 3D models from Sketchfab.
+Volupedia is an experiment mixing [Wikipedia](http://www.wikipedia.org) pages with 3D models from [Sketchfab](http://www.sketchfab.com).
 
 It is a reverse proxy of Wikipedia that replaces the main image of the article by a Sketchfab embed, if there is one that matches the title of the article.
 
@@ -10,9 +10,20 @@ Feedback & bugfixes welcome!
 
 # Articles with interesting 3D models
 
- - http://en.volupedia.org/wiki/Eiffel_Tower
+ - http://en.volupedia.org/wiki/Tesla_Motors
+ - http://en.volupedia.org/wiki/Rio_de_Janeiro
+ - http://en.volupedia.org/wiki/Samsung
+ - http://en.volupedia.org/wiki/Solar_Impulse
+ - http://en.volupedia.org/wiki/British_Museum
+ - http://en.volupedia.org/wiki/Kathmandu
+ - http://en.volupedia.org/wiki/Barack_Obama
  - http://en.volupedia.org/wiki/Solar_System
- - http://en.volupedia.org/wiki/Palmyra
+ - http://en.volupedia.org/wiki/NEAR_Shoemaker
+ - http://en.volupedia.org/wiki/Stegosaurus
+ - http://en.volupedia.org/wiki/Moai
+ - http://en.volupedia.org/wiki/Minecraft
+ - http://en.volupedia.org/wiki/Yoda
+ - http://en.volupedia.org/wiki/Dwayne_Johnson
 
 # TODO
 
