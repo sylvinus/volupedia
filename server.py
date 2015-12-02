@@ -138,6 +138,11 @@ http://en.volupedia.org/wiki/Dwayne_Johnson
   """ % (json.dumps(random_pages), len(random_pages), request.url)))
   body_elt[0].attrib["style"] = "position:relative;top:28px;"
 
+  # Remove the link ref=canonical which messes up with sharers
+  canonical = tree.cssselect("link[rel=canonical]")
+  if len(canonical) > 0:
+    canonical[0].getparent().remove(canonical[0])
+
   return lxml.html.tostring(tree)
 
 
