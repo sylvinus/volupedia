@@ -47,9 +47,12 @@ def catch_all(path):
   # TODO: also send headers along!
   if "text/html" not in wp_req.headers.get('Content-Type', ""):
 
+    # if "mediawiki&only=script" in wp_url:
+    #   return wp_req.content + "mw.centralNotice.insertBanner = function() {};"
+
     # Hacky way to disable BannerLoader, which conflicts with our own banner. We have a permanent donate link in ours.
     if "modules=startup" in wp_url:
-      return wp_req.content.replace("//meta.wikimedia.org/w/index.php?title=Special:BannerLoader", "")
+      return wp_req.content.replace("//meta.wikimedia.org/w/index.php?title=Special:BannerLoader", "#")
 
     return wp_req.content
 

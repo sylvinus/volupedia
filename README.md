@@ -30,6 +30,7 @@ Feedback & bugfixes welcome!
  - blacklist some sketchfab tags (eggs?)
  - insert more than 1 model?
  - better sketchfab order (likes+relevance?)
+ - pre-process article titles (remove parentheses?)
  - Non-english wikipedia domains
 
 # How to test locally
