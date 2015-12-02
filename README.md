@@ -18,7 +18,6 @@ Feedback & bugfixes welcome!
 
  - blacklist some sketchfab tags (eggs?)
  - insert more than 1 model?
- - conflict between top banner and WP fundraising header?
  - better sketchfab order (likes+relevance?)
  - Non-english wikipedia domains
 

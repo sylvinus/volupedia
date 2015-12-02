@@ -46,6 +46,11 @@ def catch_all(path):
   # We do a straight reverse proxy for everything other than HTML
   # TODO: also send headers along!
   if "text/html" not in wp_req.headers.get('Content-Type', ""):
+
+    # Hacky way to disable BannerLoader, which conflicts with our own banner. We have a permanent donate link in ours.
+    if "modules=startup" in wp_url:
+      return wp_req.content.replace("//meta.wikimedia.org/w/index.php?title=Special:BannerLoader", "")
+
     return wp_req.content
 
   tree = lxml.html.fromstring(wp_req.content)
@@ -72,15 +77,65 @@ def catch_all(path):
 
         inserter.insert(embed_html)
 
+  random_pages = """
+http://en.volupedia.org/wiki/Tesla_Motors
+http://en.volupedia.org/wiki/Rio_de_Janeiro
+http://en.volupedia.org/wiki/Samsung
+http://en.volupedia.org/wiki/Solar_Impulse
+http://en.volupedia.org/wiki/British_Museum
+http://en.volupedia.org/wiki/Kathmandu
+http://en.volupedia.org/wiki/Barack_Obama
+http://en.volupedia.org/wiki/Solar_System
+http://en.volupedia.org/wiki/NEAR_Shoemaker
+http://en.volupedia.org/wiki/Stegosaurus
+http://en.volupedia.org/wiki/Moai
+http://en.volupedia.org/wiki/Minecraft
+http://en.volupedia.org/wiki/Yoda
+http://en.volupedia.org/wiki/Dwayne_Johnson
+""".strip().split("\n")
+
   # Insert disclaimer banner
   body_elt[0].insert(0, lxml.html.fromstring("""
-    <div style="font-size:14px;height:28px;width:100%;background-color:#FDF2AB;border-bottom:1px solid #CCC;position:absolute;top:-28px;">
-      <div style="padding:6px;">
-        Volupedia is an experiment mixing <a href="https://www.wikipedia.org/">Wikipedia</a> pages with 3D models from <a href="http://www.sketchfab.com">Sketchfab</a>. Code &amp; feedback on <a href="https://github.com/sylvinus/volupedia">GitHub</a>!
-        <a style="float:right;" href="https://donate.wikimedia.org/">Donate to Wikipedia</a>
+    <div style="font-size:14px;height:28px;width:100%%;background-color:#FDF2AB;border-bottom:1px solid #CCC;position:absolute;top:-28px;overflow:hidden;line-height:28px;">
+      <div style="padding:0px 6px 0px 6px;">
+        Volupedia is an experiment mixing <a href="https://www.wikipedia.org/">Wikipedia</a> pages with 3D models from <a href="http://www.sketchfab.com">Sketchfab</a>.
+        <a href="#" onclick='window.location=%s[parseInt(Math.random()*%s, 10)]; return false;'>Random example</a>.
+
+        <div style="float:right;">
+          Code &amp; feedback on <a href="https://github.com/sylvinus/volupedia">GitHub</a>.
+          <a href="https://donate.wikimedia.org/">Donate to Wikipedia</a>!
+        </div>
+
+
+        <div style="float:right;margin:4px 10px 0px 0px;">
+
+          <!-- Load Facebook SDK for JavaScript -->
+          <div id="fb-root"></div>
+          <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+            fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));</script>
+
+          <!-- Your share button code -->
+          <div class="fb-share-button"
+              data-href="%s"
+              data-layout="button">
+          </div>
+        </div>
+
+        <div style="float:right;margin:4px 10px 0px 10px;">
+
+<a style="visibility:hidden;" href="https://twitter.com/share" class="twitter-share-button" data-text="Introducing Volupedia, a Wikipedia mirror powered by @Sketchfab 3D previews" data-dnt="true">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+        </div>
+
       </div>
     </div>
-  """))
+  """ % (json.dumps(random_pages), len(random_pages), request.url)))
   body_elt[0].attrib["style"] = "position:relative;top:28px;"
 
   return lxml.html.tostring(tree)
