@@ -76,7 +76,7 @@ def catch_all(path):
 
         width = inserter.get_width()
         height = int(int(width) * 1.3)  # wp_images[0].attrib.get("height", 190)
-        embed_html = str(get_sketchfab_embed(models[0], width=width, height=height))
+        embed_html = unicode(get_sketchfab_embed(models[0], width=width, height=height))
 
         inserter.insert(embed_html)
 
