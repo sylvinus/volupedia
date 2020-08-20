@@ -1,6 +1,6 @@
 cssselect==0.9.1
 Flask==0.10.1
-gunicorn==19.3.0
+gunicorn==19.5.0
 lxml==3.5.0
 requests==2.8.1
 gevent==1.0.2
